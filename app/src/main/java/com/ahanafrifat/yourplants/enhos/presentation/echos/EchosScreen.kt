@@ -69,8 +69,8 @@ fun EchosScreen(
                 selectedEchoFilterChip = state.selectedEchoFilterChip,
                 moods = state.moods,
                 topicChipTitle = state.topicChipTitle,
-                hasActiveTopicFilter = state.hasActiveTopicFilter,
-                topic = state.topics,
+                hasActiveTopicFilters = state.hasActiveTopicFilter,
+                topics = state.topics,
                 onAction = onAction,
                 modifier = Modifier
                     .fillMaxWidth()

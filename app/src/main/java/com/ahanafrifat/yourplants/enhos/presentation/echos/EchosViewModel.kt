@@ -148,12 +148,12 @@ class EchosViewModel : ViewModel() {
 
         return when (size) {
             1 -> MoodChipContent(
-                iconRes = icons,
+                iconsRes = icons,
                 title = moodNames.first()
             )
 
             2 -> MoodChipContent(
-                iconRes = icons,
+                iconsRes = icons,
                 title = UiText.Combined(
                     format = "%s, %s",
                     uiText = moodNames.toTypedArray()
@@ -163,7 +163,7 @@ class EchosViewModel : ViewModel() {
             else -> {
                 val extraElementCount = size - 2
                 MoodChipContent(
-                    iconRes = icons,
+                    iconsRes = icons,
                     title = UiText.Combined(
                         format = "%s, %s +$extraElementCount",
                         uiText = moodNames.take(2).toTypedArray()

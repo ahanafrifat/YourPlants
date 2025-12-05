@@ -37,8 +37,8 @@ fun EchoFilterRow(
     selectedEchoFilterChip: EchoFilterChip?,
     moods: List<Selectable<MoodUi>>,
     topicChipTitle: UiText,
-    hasActiveTopicFilter: Boolean,
-    topic: List<Selectable<String>>,
+    hasActiveTopicFilters: Boolean,
+    topics: List<Selectable<String>>,
     onAction: (EchosAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -68,12 +68,12 @@ fun EchoFilterRow(
                 onAction(EchosAction.OnMoodChipClick)
             },
             leadingContent = {
-                if (moodChipContent.iconRes.isNotEmpty()) {
+                if (moodChipContent.iconsRes.isNotEmpty()) {
                     Row(
                         horizontalArrangement = Arrangement.spacedBy((-4).dp),
-                        modifier = Modifier.padding(8.dp)
+                        modifier = Modifier.padding(end = 8.dp)
                     ) {
-                        moodChipContent.iconRes.forEach { iconRes ->
+                        moodChipContent.iconsRes.forEach { iconRes ->
                             Image(
                                 imageVector = ImageVector.vectorResource(iconRes),
                                 contentDescription = moodChipContent.title.asString(),
@@ -125,14 +125,14 @@ fun EchoFilterRow(
             leadingContent = {
 
             },
-            isClearVisible = hasActiveTopicFilter,
+            isClearVisible = hasActiveTopicFilters,
             isDropDownVisible = selectedEchoFilterChip == EchoFilterChip.TOPICS,
-            isHighLighted = hasActiveTopicFilter || selectedEchoFilterChip == EchoFilterChip.TOPICS,
+            isHighLighted = hasActiveTopicFilters || selectedEchoFilterChip == EchoFilterChip.TOPICS,
             onCLearButtonClicked = {
                 onAction(EchosAction.OnRemoveFilters(EchoFilterChip.TOPICS))
             },
             dropDownMenu = {
-                if (topic.isEmpty()) {
+                if (topics.isEmpty()) {
                     SelectableDropDownOptionsMenu(
                         items = listOf(
                             Selectable(
@@ -151,7 +151,7 @@ fun EchoFilterRow(
                     )
                 } else {
                     SelectableDropDownOptionsMenu(
-                        items = topic,
+                        items = topics,
                         itemDisplayText = { topic ->
                             topic
                         },
