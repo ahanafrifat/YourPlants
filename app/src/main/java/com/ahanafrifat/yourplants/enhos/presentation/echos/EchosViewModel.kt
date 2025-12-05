@@ -17,12 +17,9 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 
 class EchosViewModel : ViewModel() {
-
     private var hasLoadingInitialData = false
-
     private val selectedMoodFilters = MutableStateFlow<List<MoodUi>>(emptyList())
     private val selectedTopicFilters = MutableStateFlow<List<String>>(emptyList())
-
     private val _state = MutableStateFlow(EchosState())
     val state = _state
         .onStart {
@@ -42,22 +39,29 @@ class EchosViewModel : ViewModel() {
             EchosAction.OnFabClick -> {}
             EchosAction.OnFabLongClick -> {}
             is EchosAction.OnRemoveFilters -> {
-                when(action.filterType){
+                when (action.filterType) {
                     EchoFilterChip.MOODS -> selectedMoodFilters.update { emptyList() }
                     EchoFilterChip.TOPICS -> selectedTopicFilters.update { emptyList() }
                 }
             }
+
             EchosAction.OnSettingClick -> {}
             EchosAction.OnTopicChipClick -> {
-                _state.update { it.copy(
-                    selectedEchoFilterChip = EchoFilterChip.TOPICS
-                ) }
+                _state.update {
+                    it.copy(
+                        selectedEchoFilterChip = EchoFilterChip.TOPICS
+                    )
+                }
             }
+
             EchosAction.OnMoodChipClick -> {
-                _state.update { it.copy(
-                    selectedEchoFilterChip = EchoFilterChip.MOODS
-                ) }
+                _state.update {
+                    it.copy(
+                        selectedEchoFilterChip = EchoFilterChip.MOODS
+                    )
+                }
             }
+
             EchosAction.OnDismissTopicDropDown,
             EchosAction.OnDismissMoodDropDown -> {
                 _state.update {
