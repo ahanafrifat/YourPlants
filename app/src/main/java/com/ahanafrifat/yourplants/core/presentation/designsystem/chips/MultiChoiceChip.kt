@@ -14,7 +14,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -50,7 +49,6 @@ fun MultiChoiceChip(
     } else {
         Color.Transparent
     }
-
     val borderColor = if (isHighLighted) {
         MaterialTheme.colorScheme.primaryContainer
     } else {
@@ -65,9 +63,7 @@ fun MultiChoiceChip(
                         elevation = 4.dp,
                         shape = CircleShape
                     )
-                } else {
-                    Modifier
-                }
+                } else Modifier
             )
             .clip(CircleShape)
             .border(
@@ -78,7 +74,7 @@ fun MultiChoiceChip(
             .background(containerColor)
             .clickable(onClick = onClick)
             .animateContentSize()
-    ){
+    ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(6.dp),
@@ -87,7 +83,6 @@ fun MultiChoiceChip(
                 .align(Alignment.Center)
         ) {
             leadingContent.invoke()
-
             Text(
                 text = displayText,
                 style = MaterialTheme.typography.labelLarge,
@@ -109,9 +104,9 @@ fun MultiChoiceChip(
                     )
                 }
             }
-            if(isDropDownVisible){
-                dropDownMenu()
-            }
+        }
+        if (isDropDownVisible) {
+            dropDownMenu()
         }
     }
 }

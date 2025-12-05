@@ -17,6 +17,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ahanafrifat.yourplants.core.presentation.designsystem.theme.YourPlantsTheme
 import com.ahanafrifat.yourplants.core.presentation.designsystem.theme.bgGradient
+import com.ahanafrifat.yourplants.enhos.presentation.echos.components.EchoFilterRow
 import com.ahanafrifat.yourplants.enhos.presentation.echos.components.EchoRecordFloatingActionButton
 import com.ahanafrifat.yourplants.enhos.presentation.echos.components.EchosEmptyBackground
 import com.ahanafrifat.yourplants.enhos.presentation.echos.components.EchosTopBar
@@ -62,6 +63,18 @@ fun EchosScreen(
                 )
                 .padding(innerPadding)
         ) {
+            EchoFilterRow(
+                moodChipContent = state.moodChipContent,
+                hasActiveMoodFilters = state.hasActiveMoodFilters,
+                selectedEchoFilterChip = state.selectedEchoFilterChip,
+                moods = state.moods,
+                topicChipTitle = state.topicChipTitle,
+                hasActiveTopicFilter = state.hasActiveTopicFilter,
+                topic = state.topics,
+                onAction = onAction,
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
             when{
                 state.isLoadingData -> {
                     CircularProgressIndicator(
@@ -86,9 +99,9 @@ fun EchosScreen(
 
 }
 
-@Preview
+@Preview(showSystemUi = true)
 @Composable
-private fun Preview(){
+private fun EchosScreenPreview(){
     YourPlantsTheme {
         EchosScreen(
             state = EchosState(

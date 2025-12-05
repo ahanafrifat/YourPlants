@@ -13,6 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.ahanafrifat.yourplants.core.presentation.designsystem.theme.YourPlantsTheme
 import com.ahanafrifat.yourplants.core.presentation.designsystem.theme.bgGradient
+import com.ahanafrifat.yourplants.enhos.presentation.echos.EchosRoot
+import com.ahanafrifat.yourplants.enhos.presentation.echos.EchosScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,14 +23,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             YourPlantsTheme {
                 // A surface container using the 'background' color from the theme
-                Scaffold(
-                    containerColor = Color.Transparent,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(MaterialTheme.colorScheme.bgGradient)
-                ) { innerPadding ->
-                    BakingScreen()
-                }
+                EchosRoot()
 //                Surface(
 //                    modifier = Modifier.fillMaxSize(),
 //                    color = MaterialTheme.colorScheme.background,
