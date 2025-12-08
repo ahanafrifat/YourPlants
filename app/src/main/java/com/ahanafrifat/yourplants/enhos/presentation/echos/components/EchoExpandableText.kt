@@ -39,7 +39,7 @@ fun EchoExpandableText(
     val showMoreText = stringResource(R.string.show_more)
     val primary = MaterialTheme.colorScheme.primary
 
-    val textToShow = remember(isClickable, isExpanded) {
+    val textToShow = remember(text, isClickable, isExpanded) {
         buildAnnotatedString {
             when {
                 isClickable && !isExpanded -> {
@@ -79,7 +79,7 @@ fun EchoExpandableText(
                 enabled = isClickable,
                 interactionSource = null,
                 indication = null
-                ) {
+            ) {
                 isExpanded = !isExpanded
             }
             .animateContentSize(),

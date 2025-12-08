@@ -23,6 +23,7 @@ import com.ahanafrifat.yourplants.core.presentation.designsystem.theme.MoodPrima
 import com.ahanafrifat.yourplants.core.presentation.designsystem.theme.MoodPrimary80
 import com.ahanafrifat.yourplants.core.presentation.designsystem.theme.YourPlantsTheme
 import com.ahanafrifat.yourplants.core.presentation.util.formateMMSS
+import com.ahanafrifat.yourplants.enhos.presentation.echos.models.TrackSizeInfo
 import com.ahanafrifat.yourplants.enhos.presentation.models.MoodUi
 import com.ahanafrifat.yourplants.enhos.presentation.models.PlaybackState
 import kotlin.random.Random
@@ -39,7 +40,8 @@ fun EchoMoodPlayer(
     powerRatios: List<Float>,
     onPlayClick: ()-> Unit,
     onPauseClick: ()-> Unit,
-    modifier: Modifier,
+    onTrackSizeAvailable: (TrackSizeInfo) -> Unit,
+    modifier: Modifier = Modifier,
     amplitudeBarWidth: Dp = 5.dp,
     amplitudeBarSpacing: Dp = 4.dp
 ){
@@ -127,6 +129,7 @@ private fun EchoMoodPlayerPreview(){
             powerRatios = ratios,
             onPauseClick = {},
             onPlayClick = {},
+            onTrackSizeAvailable = {},
             modifier = Modifier
                 .fillMaxWidth()
         )
