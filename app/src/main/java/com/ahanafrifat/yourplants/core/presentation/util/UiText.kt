@@ -37,7 +37,7 @@ sealed interface UiText {
     @Stable
     data class Combined(
         val format: String,
-        val uiText: Array<UiText>
+        val uiTexts: Array<UiText>
     ) : UiText {
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
@@ -46,14 +46,14 @@ sealed interface UiText {
             other as Combined
 
             if (format != other.format) return false
-            if (!uiText.contentEquals(other.uiText)) return false
+            if (!uiTexts.contentEquals(other.uiTexts)) return false
 
             return true
         }
 
         override fun hashCode(): Int {
             var result = format.hashCode()
-            result = 31 * result + uiText.contentHashCode()
+            result = 31 * result + uiTexts.contentHashCode()
             return result
         }
 
@@ -65,7 +65,7 @@ sealed interface UiText {
             is Dynamic -> value
             is StringResource -> stringResource(id, *args)
             is Combined -> {
-                val string = uiText.map { uiText ->
+                val string = uiTexts.map { uiText ->
                     when (uiText) {
                         is Combined -> throw IllegalArgumentException("can not combined UiText")
                         is Dynamic -> uiText.value
@@ -83,7 +83,7 @@ sealed interface UiText {
             is Dynamic -> value
             is StringResource -> context.getString(id, *args)
             is Combined -> {
-                val string = uiText.map { uiText ->
+                val string = uiTexts.map { uiText ->
                     when (uiText) {
                         is Combined -> throw IllegalArgumentException("can not combined UiText")
                         is Dynamic -> uiText.value

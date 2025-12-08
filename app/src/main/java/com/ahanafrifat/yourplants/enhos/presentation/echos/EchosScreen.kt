@@ -18,6 +18,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ahanafrifat.yourplants.core.presentation.designsystem.theme.YourPlantsTheme
 import com.ahanafrifat.yourplants.core.presentation.designsystem.theme.bgGradient
 import com.ahanafrifat.yourplants.enhos.presentation.echos.components.EchoFilterRow
+import com.ahanafrifat.yourplants.enhos.presentation.echos.components.EchoList
 import com.ahanafrifat.yourplants.enhos.presentation.echos.components.EchoRecordFloatingActionButton
 import com.ahanafrifat.yourplants.enhos.presentation.echos.components.EchosEmptyBackground
 import com.ahanafrifat.yourplants.enhos.presentation.echos.components.EchosTopBar
@@ -69,13 +70,13 @@ fun EchosScreen(
                 selectedEchoFilterChip = state.selectedEchoFilterChip,
                 moods = state.moods,
                 topicChipTitle = state.topicChipTitle,
-                hasActiveTopicFilters = state.hasActiveTopicFilter,
+                hasActiveTopicFilters = state.hasActiveTopicFilters,
                 topics = state.topics,
                 onAction = onAction,
                 modifier = Modifier
                     .fillMaxWidth()
             )
-            when{
+            when {
                 state.isLoadingData -> {
                     CircularProgressIndicator(
                         modifier = Modifier
@@ -85,11 +86,27 @@ fun EchosScreen(
                         color = MaterialTheme.colorScheme.primary
                     )
                 }
-                !state.hasEchosRecorded ->{
+
+                !state.hasEchosRecorded -> {
                     EchosEmptyBackground(
                         modifier = Modifier
                             .weight(1f)
                             .fillMaxWidth()
+                    )
+                }
+
+                else -> {
+                    EchoList(
+                        sections = state.echoDaySection,
+                        onPlayClick = {
+                            onAction(EchosAction.OnPlayEchoClick(it))
+                        },
+                        onPauseClick = {
+                            onAction(EchosAction.OnPauseClick)
+                        },
+                        onTrackSizeAvailable = {trackSize ->
+                            onAction(EchosAction.OnTrackSizeAvailable(trackSize))
+                        }
                     )
                 }
             }
@@ -101,7 +118,7 @@ fun EchosScreen(
 
 @Preview(showSystemUi = true)
 @Composable
-private fun EchosScreenPreview(){
+private fun EchosScreenPreview() {
     YourPlantsTheme {
         EchosScreen(
             state = EchosState(

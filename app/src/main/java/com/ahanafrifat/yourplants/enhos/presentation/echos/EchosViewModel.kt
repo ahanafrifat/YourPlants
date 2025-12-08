@@ -17,15 +17,15 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 
 class EchosViewModel : ViewModel() {
-    private var hasLoadingInitialData = false
+    private var hasLoadedInitialData = false
     private val selectedMoodFilters = MutableStateFlow<List<MoodUi>>(emptyList())
     private val selectedTopicFilters = MutableStateFlow<List<String>>(emptyList())
     private val _state = MutableStateFlow(EchosState())
     val state = _state
         .onStart {
-            if (!hasLoadingInitialData) {
+            if (!hasLoadedInitialData) {
                 observeFilters()
-                hasLoadingInitialData = true
+                hasLoadedInitialData = true
             }
         }
         .stateIn(
@@ -78,6 +78,10 @@ class EchosViewModel : ViewModel() {
             is EchosAction.OnFilterByTopicClick -> {
                 toggleTopicFilter(action.topic)
             }
+
+            EchosAction.OnPauseClick -> TODO()
+            is EchosAction.OnPlayEchoClick -> TODO()
+            is EchosAction.OnTrackSizeAvailable -> TODO()
         }
     }
 
@@ -121,7 +125,7 @@ class EchosViewModel : ViewModel() {
                         )
                     },
                     hasActiveMoodFilters = selectedMoods.isNotEmpty(),
-                    hasActiveTopicFilter = selectedTopics.isNotEmpty(),
+                    hasActiveTopicFilters = selectedTopics.isNotEmpty(),
                     topicChipTitle = selectedTopics.deriveTopicsToText(),
                     moodChipContent = selectedMoods.asMoodChipContent()
                 )
@@ -132,8 +136,8 @@ class EchosViewModel : ViewModel() {
     private fun List<String>.deriveTopicsToText(): UiText {
         return when (size) {
             0 -> UiText.StringResource(R.string.all_topics)
-            1 -> UiText.Dynamic(first())
-            2 -> UiText.Dynamic("${first()}, ${last()}")
+            1 -> UiText.Dynamic(this.first())
+            2 -> UiText.Dynamic("${this.first()}, ${this.last()}")
             else -> {
                 val extraElementCount = size - 2
                 UiText.Dynamic("${this.first()}, ${this[1]} +$extraElementCount")
@@ -160,7 +164,7 @@ class EchosViewModel : ViewModel() {
                 iconsRes = icons,
                 title = UiText.Combined(
                     format = "%s, %s",
-                    uiText = moodNames.toTypedArray()
+                    uiTexts = moodNames.toTypedArray()
                 )
             )
 
@@ -170,7 +174,7 @@ class EchosViewModel : ViewModel() {
                     iconsRes = icons,
                     title = UiText.Combined(
                         format = "%s, %s +$extraElementCount",
-                        uiText = moodNames.take(2).toTypedArray()
+                        uiTexts = moodNames.take(2).toTypedArray()
                     )
                 )
             }

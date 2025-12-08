@@ -1,6 +1,7 @@
 package com.ahanafrifat.yourplants.enhos.presentation.echos
 
 import com.ahanafrifat.yourplants.enhos.presentation.echos.models.EchoFilterChip
+import com.ahanafrifat.yourplants.enhos.presentation.echos.models.TrackSizeInfo
 import com.ahanafrifat.yourplants.enhos.presentation.models.MoodUi
 
 sealed interface EchosAction {
@@ -13,5 +14,8 @@ sealed interface EchosAction {
     data object OnFabClick : EchosAction
     data object OnFabLongClick : EchosAction
     data object OnSettingClick : EchosAction
+    data object OnPauseClick : EchosAction
     data class OnRemoveFilters(val filterType: EchoFilterChip) : EchosAction
+    data class OnPlayEchoClick(val echoId: Int): EchosAction
+    data class OnTrackSizeAvailable(val trackSizeInfo: TrackSizeInfo): EchosAction
 }
