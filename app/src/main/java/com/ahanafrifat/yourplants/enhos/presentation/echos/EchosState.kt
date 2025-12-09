@@ -4,6 +4,7 @@ import com.ahanafrifat.yourplants.R
 import com.ahanafrifat.yourplants.core.presentation.designsystem.dropdowns.Selectable
 import com.ahanafrifat.yourplants.core.presentation.designsystem.dropdowns.Selectable.Companion.asUnselectedItems
 import com.ahanafrifat.yourplants.core.presentation.util.UiText
+import com.ahanafrifat.yourplants.enhos.presentation.echos.models.AudioCaptureMethod
 import com.ahanafrifat.yourplants.enhos.presentation.echos.models.EchoDaySection
 import com.ahanafrifat.yourplants.enhos.presentation.echos.models.EchoFilterChip
 import com.ahanafrifat.yourplants.enhos.presentation.echos.models.MoodChipContent
@@ -12,6 +13,7 @@ import com.ahanafrifat.yourplants.enhos.presentation.models.MoodUi
 
 data class EchosState(
     val echos: Map<UiText, List<EchoUi>> = emptyMap(),
+    val currentCaptureMethod: AudioCaptureMethod? = null,
     val hasEchosRecorded: Boolean = false,
     val hasActiveTopicFilters: Boolean = false,
     val hasActiveMoodFilters: Boolean = false,

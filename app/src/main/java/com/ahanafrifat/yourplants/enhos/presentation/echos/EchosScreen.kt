@@ -1,5 +1,8 @@
 package com.ahanafrifat.yourplants.enhos.presentation.echos
 
+import android.Manifest
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,17 +20,34 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ahanafrifat.yourplants.core.presentation.designsystem.theme.YourPlantsTheme
 import com.ahanafrifat.yourplants.core.presentation.designsystem.theme.bgGradient
+import com.ahanafrifat.yourplants.core.presentation.util.ObserveAsEvents
 import com.ahanafrifat.yourplants.enhos.presentation.echos.components.EchoFilterRow
 import com.ahanafrifat.yourplants.enhos.presentation.echos.components.EchoList
 import com.ahanafrifat.yourplants.enhos.presentation.echos.components.EchoRecordFloatingActionButton
 import com.ahanafrifat.yourplants.enhos.presentation.echos.components.EchosEmptyBackground
 import com.ahanafrifat.yourplants.enhos.presentation.echos.components.EchosTopBar
+import com.ahanafrifat.yourplants.enhos.presentation.echos.models.AudioCaptureMethod
 
 @Composable
 fun EchosRoot(
     viewModel: EchosViewModel = viewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if(isGranted && state.currentCaptureMethod == AudioCaptureMethod.STANDARD){
+            viewModel.onAction(EchosAction.OnAudioPermissionGranted)
+        }
+    }
+    ObserveAsEvents(viewModel.events) { events ->
+        when (events) {
+            is EchosEvent.RequestAudioPermission -> {
+                permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+            }
+        }
+    }
 
     EchosScreen(
         state = state,
@@ -104,7 +124,7 @@ fun EchosScreen(
                         onPauseClick = {
                             onAction(EchosAction.OnPauseClick)
                         },
-                        onTrackSizeAvailable = {trackSize ->
+                        onTrackSizeAvailable = { trackSize ->
                             onAction(EchosAction.OnTrackSizeAvailable(trackSize))
                         }
                     )
