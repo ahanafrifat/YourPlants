@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.ahanafrifat.yourplants.R
 import com.ahanafrifat.yourplants.core.presentation.designsystem.dropdowns.Selectable
 import com.ahanafrifat.yourplants.core.presentation.util.UiText
+import com.ahanafrifat.yourplants.enhos.domain.recording.VoiceRecorder
 import com.ahanafrifat.yourplants.enhos.presentation.echos.models.AudioCaptureMethod
 import com.ahanafrifat.yourplants.enhos.presentation.echos.models.EchoFilterChip
 import com.ahanafrifat.yourplants.enhos.presentation.echos.models.MoodChipContent
@@ -21,7 +22,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class EchosViewModel : ViewModel() {
+class EchosViewModel(
+    private val voiceRecorder: VoiceRecorder
+) : ViewModel() {
     private var hasLoadedInitialData = false
     private val selectedMoodFilters = MutableStateFlow<List<MoodUi>>(emptyList())
     private val selectedTopicFilters = MutableStateFlow<List<String>>(emptyList())

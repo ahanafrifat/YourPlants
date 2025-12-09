@@ -23,11 +23,11 @@ import java.io.IOException
 import java.util.UUID
 import kotlin.time.Duration.Companion.milliseconds
 
-class AndroidVoiceRecording(
+class AndroidVoiceRecorder(
     private val context: Context,
     private val applicationScope: CoroutineScope
 ) : VoiceRecorder {
-    companion object {
+    companion object Companion {
         private const val TEMP_FILE_PREFIX = "temp_recording"
         private const val MAX_AMPLITUDE_VALUE = 26_000L
     }

@@ -27,17 +27,18 @@ import com.ahanafrifat.yourplants.enhos.presentation.echos.components.EchoRecord
 import com.ahanafrifat.yourplants.enhos.presentation.echos.components.EchosEmptyBackground
 import com.ahanafrifat.yourplants.enhos.presentation.echos.components.EchosTopBar
 import com.ahanafrifat.yourplants.enhos.presentation.echos.models.AudioCaptureMethod
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun EchosRoot(
-    viewModel: EchosViewModel = viewModel()
+    viewModel: EchosViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted ->
-        if(isGranted && state.currentCaptureMethod == AudioCaptureMethod.STANDARD){
+        if (isGranted && state.currentCaptureMethod == AudioCaptureMethod.STANDARD) {
             viewModel.onAction(EchosAction.OnAudioPermissionGranted)
         }
     }
