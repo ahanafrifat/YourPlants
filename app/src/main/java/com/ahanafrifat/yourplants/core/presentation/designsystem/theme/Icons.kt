@@ -9,3 +9,6 @@ import com.ahanafrifat.yourplants.R
 val Icons.Filled.Pause: ImageVector
     @Composable
     get() = ImageVector.vectorResource(R.drawable.pause)
+val Icons.Filled.Microphone: ImageVector
+    @Composable
+    get() = ImageVector.vectorResource(R.drawable.microphone)

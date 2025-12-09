@@ -1,6 +1,7 @@
 package com.ahanafrifat.yourplants.enhos.presentation.echos
 
 import android.Manifest
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -15,19 +16,23 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ahanafrifat.yourplants.R
 import com.ahanafrifat.yourplants.core.presentation.designsystem.theme.YourPlantsTheme
 import com.ahanafrifat.yourplants.core.presentation.designsystem.theme.bgGradient
 import com.ahanafrifat.yourplants.core.presentation.util.ObserveAsEvents
 import com.ahanafrifat.yourplants.enhos.presentation.echos.components.EchoFilterRow
 import com.ahanafrifat.yourplants.enhos.presentation.echos.components.EchoList
 import com.ahanafrifat.yourplants.enhos.presentation.echos.components.EchoRecordFloatingActionButton
+import com.ahanafrifat.yourplants.enhos.presentation.echos.components.EchoRecordingSheet
 import com.ahanafrifat.yourplants.enhos.presentation.echos.components.EchosEmptyBackground
 import com.ahanafrifat.yourplants.enhos.presentation.echos.components.EchosTopBar
 import com.ahanafrifat.yourplants.enhos.presentation.echos.models.AudioCaptureMethod
+import com.ahanafrifat.yourplants.enhos.presentation.echos.models.RecordingState
 import org.koin.androidx.compose.koinViewModel
+import timber.log.Timber
 
 @Composable
 fun EchosRoot(
@@ -42,10 +47,24 @@ fun EchosRoot(
             viewModel.onAction(EchosAction.OnAudioPermissionGranted)
         }
     }
+
+    val context = LocalContext.current
     ObserveAsEvents(viewModel.events) { events ->
         when (events) {
             is EchosEvent.RequestAudioPermission -> {
                 permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+            }
+
+            is EchosEvent.RecordingTooShort -> {
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.audio_recording_was_too_short),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+
+            is EchosEvent.OnDoneRecording -> {
+                Timber.d("Recording Successful!")
             }
         }
     }
@@ -123,7 +142,7 @@ fun EchosScreen(
                             onAction(EchosAction.OnPlayEchoClick(it))
                         },
                         onPauseClick = {
-                            onAction(EchosAction.OnPauseClick)
+                            onAction(EchosAction.OnPauseRecordingClick)
                         },
                         onTrackSizeAvailable = { trackSize ->
                             onAction(EchosAction.OnTrackSizeAvailable(trackSize))
@@ -133,8 +152,21 @@ fun EchosScreen(
             }
         }
 
+        if (state.recordingState in listOf(
+                RecordingState.NORMAL_CAPTURE,
+                RecordingState.PAUSED
+            )
+        ) {
+            EchoRecordingSheet(
+                formattedRecordDuration = state.formattedRecordDuration,
+                isRecording = state.recordingState == RecordingState.NORMAL_CAPTURE,
+                onDismiss = { onAction(EchosAction.OnCancelRecording) },
+                onPauseClick = { onAction(EchosAction.OnPauseRecordingClick) },
+                onResumeClick = { onAction(EchosAction.OnResumeRecordingClick) },
+                onCompleteRecording = { onAction(EchosAction.OnCompleteRecording) },
+            )
+        }
     }
-
 }
 
 @Preview(showSystemUi = true)
