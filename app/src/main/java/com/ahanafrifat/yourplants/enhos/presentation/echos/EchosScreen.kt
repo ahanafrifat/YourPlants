@@ -14,6 +14,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -23,6 +24,7 @@ import com.ahanafrifat.yourplants.R
 import com.ahanafrifat.yourplants.core.presentation.designsystem.theme.YourPlantsTheme
 import com.ahanafrifat.yourplants.core.presentation.designsystem.theme.bgGradient
 import com.ahanafrifat.yourplants.core.presentation.util.ObserveAsEvents
+import com.ahanafrifat.yourplants.core.presentation.util.isAppInForeground
 import com.ahanafrifat.yourplants.enhos.presentation.echos.components.EchoFilterRow
 import com.ahanafrifat.yourplants.enhos.presentation.echos.components.EchoList
 import com.ahanafrifat.yourplants.enhos.presentation.echos.components.EchoRecordFloatingActionButton
@@ -66,6 +68,13 @@ fun EchosRoot(
             is EchosEvent.OnDoneRecording -> {
                 Timber.d("Recording Successful!")
             }
+        }
+    }
+
+    val isAppInForeground by isAppInForeground()
+    LaunchedEffect(isAppInForeground, state.recordingState) {
+        if (state.recordingState== RecordingState.NORMAL_CAPTURE && !isAppInForeground){
+            viewModel.onAction(EchosAction.OnPauseRecordingClick)
         }
     }
 
