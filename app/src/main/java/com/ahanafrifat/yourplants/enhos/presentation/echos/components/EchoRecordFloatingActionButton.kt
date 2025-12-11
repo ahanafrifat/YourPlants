@@ -32,6 +32,13 @@ fun EchoRecordFloatingActionButton(
     }
 }
 
+@Composable
+fun EchoBubbleFloatingActionButton(
+    modifier: Modifier = Modifier
+){
+
+}
+
 @Preview
 @Composable
 private fun EchoRecordFloatingActionButtonPreview(){

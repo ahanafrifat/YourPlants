@@ -40,6 +40,7 @@ import com.ahanafrifat.yourplants.core.presentation.designsystem.theme.Microphon
 import com.ahanafrifat.yourplants.core.presentation.designsystem.theme.Pause
 import com.ahanafrifat.yourplants.core.presentation.designsystem.theme.YourPlantsTheme
 import com.ahanafrifat.yourplants.core.presentation.designsystem.theme.buttonGradient
+import com.ahanafrifat.yourplants.core.presentation.designsystem.theme.buttonGradientPressed
 import com.ahanafrifat.yourplants.core.presentation.designsystem.theme.primary90
 import com.ahanafrifat.yourplants.core.presentation.designsystem.theme.primary95
 
@@ -152,34 +153,38 @@ fun SheetContent(
                 modifier = Modifier
                     .size(primaryButtonSize)
                     .background(
-                        color = if(isRecording){
+                        color = if (isRecording) {
                             MaterialTheme.colorScheme.primary95
-                        }else{
+                        } else {
                             Color.Transparent
                         },
                         shape = CircleShape
                     )
                     .padding(10.dp)
                     .background(
-                        color = if(isRecording){
+                        color = if (isRecording) {
                             MaterialTheme.colorScheme.primary90
-                        }else{
+                        } else {
                             Color.Transparent
                         },
                         shape = CircleShape
                     )
                     .padding(16.dp)
                     .background(
-                        brush = MaterialTheme.colorScheme.buttonGradient,
+                        brush = if (isPressed) {
+                            MaterialTheme.colorScheme.buttonGradientPressed
+                        }else{
+                            MaterialTheme.colorScheme.buttonGradient
+                        },
                         shape = CircleShape
                     )
                     .clip(CircleShape)
                     .clickable(
                         interactionSource = interactionSource,
                         indication = LocalIndication.current,
-                        onClick = if(isRecording){
+                        onClick = if (isRecording) {
                             onCompleteRecording
-                        }else{
+                        } else {
                             onResumeClick
                         }
                     ),
