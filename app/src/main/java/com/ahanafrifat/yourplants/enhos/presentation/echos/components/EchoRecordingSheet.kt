@@ -144,66 +144,91 @@ fun SheetContent(
                 )
             }
 
-            val interactionSource = remember {
-                MutableInteractionSource()
-            }
-            val isPressed by interactionSource.collectIsPressedAsState()
-
-            Box(
-                modifier = Modifier
-                    .size(primaryButtonSize)
-                    .background(
-                        color = if (isRecording) {
-                            MaterialTheme.colorScheme.primary95
-                        } else {
-                            Color.Transparent
-                        },
-                        shape = CircleShape
-                    )
-                    .padding(10.dp)
-                    .background(
-                        color = if (isRecording) {
-                            MaterialTheme.colorScheme.primary90
-                        } else {
-                            Color.Transparent
-                        },
-                        shape = CircleShape
-                    )
-                    .padding(16.dp)
-                    .background(
-                        brush = if (isPressed) {
-                            MaterialTheme.colorScheme.buttonGradientPressed
+            EchoBubbleFloatingActionButton(
+                showBubble = isRecording,
+                onClick = if (isRecording){
+                    onCompleteRecording
+                }else{
+                    onResumeClick
+                },
+                icon = {
+                    Icon(
+                        imageVector = if(isRecording){
+                            Icons.Default.Check
                         }else{
-                            MaterialTheme.colorScheme.buttonGradient
+                            Icons.Default.Microphone
                         },
-                        shape = CircleShape
+                        contentDescription = if (isRecording){
+                            stringResource(R.string.finish_recording)
+                        }else{
+                            stringResource(R.string.resume_recording)
+                        },
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer
                     )
-                    .clip(CircleShape)
-                    .clickable(
-                        interactionSource = interactionSource,
-                        indication = LocalIndication.current,
-                        onClick = if (isRecording) {
-                            onCompleteRecording
-                        } else {
-                            onResumeClick
-                        }
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = if(isRecording){
-                        Icons.Default.Check
-                    }else{
-                        Icons.Default.Microphone
-                    },
-                    contentDescription = if (isRecording){
-                        stringResource(R.string.finish_recording)
-                    }else{
-                        stringResource(R.string.resume_recording)
-                    },
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer
-                )
-            }
+                },
+                primaryButtonSize = 72.dp
+            )
+//
+//            val interactionSource = remember {
+//                MutableInteractionSource()
+//            }
+//            val isPressed by interactionSource.collectIsPressedAsState()
+//
+//            Box(
+//                modifier = Modifier
+//                    .size(primaryButtonSize)
+//                    .background(
+//                        color = if (isRecording) {
+//                            MaterialTheme.colorScheme.primary95
+//                        } else {
+//                            Color.Transparent
+//                        },
+//                        shape = CircleShape
+//                    )
+//                    .padding(10.dp)
+//                    .background(
+//                        color = if (isRecording) {
+//                            MaterialTheme.colorScheme.primary90
+//                        } else {
+//                            Color.Transparent
+//                        },
+//                        shape = CircleShape
+//                    )
+//                    .padding(16.dp)
+//                    .background(
+//                        brush = if (isPressed) {
+//                            MaterialTheme.colorScheme.buttonGradientPressed
+//                        }else{
+//                            MaterialTheme.colorScheme.buttonGradient
+//                        },
+//                        shape = CircleShape
+//                    )
+//                    .clip(CircleShape)
+//                    .clickable(
+//                        interactionSource = interactionSource,
+//                        indication = LocalIndication.current,
+//                        onClick = if (isRecording) {
+//                            onCompleteRecording
+//                        } else {
+//                            onResumeClick
+//                        }
+//                    ),
+//                contentAlignment = Alignment.Center
+//            ) {
+//                Icon(
+//                    imageVector = if(isRecording){
+//                        Icons.Default.Check
+//                    }else{
+//                        Icons.Default.Microphone
+//                    },
+//                    contentDescription = if (isRecording){
+//                        stringResource(R.string.finish_recording)
+//                    }else{
+//                        stringResource(R.string.resume_recording)
+//                    },
+//                    tint = MaterialTheme.colorScheme.onPrimaryContainer
+//                )
+//            }
 
             FilledIconButton(
                 onClick = if (isRecording) {
@@ -242,7 +267,7 @@ private fun SheetContentPreview() {
     YourPlantsTheme {
         SheetContent(
             formattedRecordDuration = "00:10:34",
-            isRecording = true,
+            isRecording = false,
             onDismiss = {},
             onPauseClick = {},
             onResumeClick = {},

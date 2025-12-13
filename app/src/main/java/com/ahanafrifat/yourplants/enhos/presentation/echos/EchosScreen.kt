@@ -27,7 +27,7 @@ import com.ahanafrifat.yourplants.core.presentation.util.ObserveAsEvents
 import com.ahanafrifat.yourplants.core.presentation.util.isAppInForeground
 import com.ahanafrifat.yourplants.enhos.presentation.echos.components.EchoFilterRow
 import com.ahanafrifat.yourplants.enhos.presentation.echos.components.EchoList
-import com.ahanafrifat.yourplants.enhos.presentation.echos.components.EchoRecordFloatingActionButton
+import com.ahanafrifat.yourplants.enhos.presentation.echos.components.EchoQuickRecordFloatingActionButton
 import com.ahanafrifat.yourplants.enhos.presentation.echos.components.EchoRecordingSheet
 import com.ahanafrifat.yourplants.enhos.presentation.echos.components.EchosEmptyBackground
 import com.ahanafrifat.yourplants.enhos.presentation.echos.components.EchosTopBar
@@ -91,7 +91,7 @@ fun EchosScreen(
 ) {
     Scaffold(
         floatingActionButton = {
-            EchoRecordFloatingActionButton(
+            EchoQuickRecordFloatingActionButton(
                 onClick = {
                     onAction(EchosAction.OnFabClick)
                 }
