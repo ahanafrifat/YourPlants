@@ -1,17 +1,15 @@
 package com.ahanafrifat.yourplants.enhos.presentation.echos.components
 
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -26,20 +24,22 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.ahanafrifat.yourplants.R
+import com.ahanafrifat.yourplants.core.presentation.designsystem.theme.Microphone
 import com.ahanafrifat.yourplants.core.presentation.designsystem.theme.YourPlantsTheme
-import com.ahanafrifat.yourplants.enhos.presentation.echos.models.BubbleFloatingActionButtonColors
+import com.ahanafrifat.yourplants.core.presentation.designsystem.theme.buttonGradient
+import com.ahanafrifat.yourplants.core.presentation.designsystem.theme.primary90
+import com.ahanafrifat.yourplants.core.presentation.designsystem.theme.primary95
 import com.ahanafrifat.yourplants.enhos.presentation.echos.models.rememberBubbleFloatingActionButtonColors
 import kotlin.math.roundToInt
 
@@ -48,7 +48,7 @@ fun EchoQuickRecordFloatingActionButton(
     isQuickRecording: Boolean,
     onClick: () -> Unit,
     onLongPressStart: () -> Unit,
-    onLongPressEnd: () -> Unit,
+    onLongPressEnd: (isCancelled: Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val hapticFeedback = LocalHapticFeedback.current
@@ -57,15 +57,15 @@ fun EchoQuickRecordFloatingActionButton(
         cancelButtonOffset.toPx()
     }
 
-    var dragOffSetX by remember {
+    var dragOffsetX by remember {
         mutableFloatStateOf(0f)
     }
-    var needToHandelLongClickEnd by remember {
+    var needToHandleLongClickEnd by remember {
         mutableStateOf(false)
     }
     val isWithinCancelThreshold by remember(cancelButtonOffsetPx) {
         derivedStateOf {
-            dragOffSetX <= cancelButtonOffsetPx * 0.8f
+            dragOffsetX <= cancelButtonOffsetPx * 0.8f
         }
     }
 
@@ -78,7 +78,7 @@ fun EchoQuickRecordFloatingActionButton(
     val fabPositionOffset by remember {
         derivedStateOf {
             IntOffset(
-                x = dragOffSetX.toInt().coerceIn(
+                x = dragOffsetX.toInt().coerceIn(
                     minimumValue = cancelButtonOffsetPx.roundToInt(),
                     maximumValue = 0
                 ),
@@ -87,49 +87,115 @@ fun EchoQuickRecordFloatingActionButton(
         }
     }
 
-//    Box(
-//        modifier = modifier
-//            .pointerInput(Unit){
-//                detectDragGesturesAfterLongPress(
-//                    onDragStart = {
-//                        needToHandelLongClickEnd = true
-//                        hapticFeedback.performHapticFeedback((HapticFeedbackType.LongPress))
-//                        onLongPressStart
-//                    },
-//                    onDragEnd = {
-//                        if (needToHandelLongClickEnd){
-//                            needToHandelLongClickEnd = false
-//                            onLongPressEnd(isWithinCancelThreshold)
-//                            dragOffSetX =0f
-//                        }
-//                    },
-//                    onDragCancel = {},
-//                    onDrag = {}
-//                )
-//            }
-//    )
-
-    FloatingActionButton(
-        onClick = onClick,
-        shape = CircleShape,
-        containerColor = MaterialTheme.colorScheme.primaryContainer,
-        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+    Box(
+        contentAlignment = Alignment.Center,
         modifier = modifier
+            .pointerInput(Unit) {
+                detectDragGesturesAfterLongPress(
+                    onDragStart = {
+                        needToHandleLongClickEnd = true
+                        hapticFeedback.performHapticFeedback((HapticFeedbackType.LongPress))
+                        onLongPressStart()
+                    },
+                    onDragEnd = {
+                        if (needToHandleLongClickEnd) {
+                            needToHandleLongClickEnd = false
+                            onLongPressEnd(isWithinCancelThreshold)
+                            dragOffsetX = 0f
+                        }
+                    },
+                    onDragCancel = {
+                        if (needToHandleLongClickEnd) {
+                            needToHandleLongClickEnd = false
+                            onLongPressEnd(isWithinCancelThreshold)
+                            dragOffsetX = 0f
+                        }
+                    },
+                    onDrag = { change, _ ->
+                        dragOffsetX += change.positionChange().x
+                    }
+                )
+            }
     ) {
-        Icon(
-            imageVector = Icons.Filled.Add,
-            contentDescription = stringResource(R.string.add_new_entry)
+        if (isQuickRecording) {
+            Box(
+                modifier = Modifier
+                    .offset(x = cancelButtonOffset)
+                    .size(48.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.errorContainer),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = stringResource(R.string.cancel_recording),
+                    tint = MaterialTheme.colorScheme.onErrorContainer
+                )
+            }
+        }
+
+        EchoBubbleFloatingActionButton(
+            modifier = Modifier
+                .offset { fabPositionOffset },
+            showBubble = isQuickRecording,
+            onClick = onClick,
+            icon = {
+                Icon(
+                    imageVector = if (isQuickRecording) {
+                        Icons.Filled.Microphone
+                    } else {
+                        Icons.Filled.Add
+                    },
+                    contentDescription = stringResource(R.string.add_new_entry),
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+            },
+            colors = rememberBubbleFloatingActionButtonColors(
+                primary = if (isWithinCancelThreshold) {
+                    SolidColor(MaterialTheme.colorScheme.errorContainer)
+                } else {
+                    MaterialTheme.colorScheme.buttonGradient
+                },
+                primaryPressed = MaterialTheme.colorScheme.buttonGradient,
+                outerCircle = if (isWithinCancelThreshold) {
+                    SolidColor(MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.5f))
+                } else {
+                    SolidColor(MaterialTheme.colorScheme.primary95)
+                },
+                innerCircle = if (isWithinCancelThreshold) {
+                    SolidColor(MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.3f))
+                } else {
+                    SolidColor(MaterialTheme.colorScheme.primary90)
+                }
+            )
         )
     }
+
+//    FloatingActionButton(
+//        onClick = onClick,
+//        shape = CircleShape,
+//        containerColor = MaterialTheme.colorScheme.primaryContainer,
+//        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+//        modifier = modifier
+//    ) {
+//        Icon(
+//            imageVector = Icons.Filled.Add,
+//            contentDescription = stringResource(R.string.add_new_entry)
+//        )
+//    }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun EchoQuickRecordFloatingActionButtonPreview() {
     YourPlantsTheme {
-//        EchoQuickRecordFloatingActionButton(
-//            onClick = {},
-//            modifier = Modifier
-//        )
+        EchoQuickRecordFloatingActionButton(
+            isQuickRecording = true,
+            onClick = {},
+            onLongPressStart = {},
+            onLongPressEnd = {},
+            modifier = Modifier
+                .fillMaxSize()
+        )
     }
 }

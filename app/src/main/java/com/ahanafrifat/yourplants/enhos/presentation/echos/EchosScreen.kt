@@ -1,6 +1,7 @@
 package com.ahanafrifat.yourplants.enhos.presentation.echos
 
 import android.Manifest
+import android.content.pm.PackageManager
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -19,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ahanafrifat.yourplants.R
 import com.ahanafrifat.yourplants.core.presentation.designsystem.theme.YourPlantsTheme
@@ -89,11 +91,31 @@ fun EchosScreen(
     state: EchosState,
     onAction: (EchosAction) -> Unit
 ) {
+    val context = LocalContext.current
     Scaffold(
         floatingActionButton = {
             EchoQuickRecordFloatingActionButton(
                 onClick = {
-                    onAction(EchosAction.OnFabClick)
+                    onAction(EchosAction.OnRecordFabClick)
+                },
+                isQuickRecording = state.recordingState == RecordingState.QUICK_CAPTURE,
+                onLongPressEnd = { cancelledRecording ->
+                    if (cancelledRecording){
+                        onAction(EchosAction.OnCancelRecording)
+                    }else{
+                        onAction(EchosAction.OnCompleteRecording)
+                    }
+                },
+                onLongPressStart = {
+                    val hasPermission = ContextCompat.checkSelfPermission(
+                        context,
+                        Manifest.permission.RECORD_AUDIO
+                    ) == PackageManager.PERMISSION_GRANTED
+                    if(hasPermission){
+                        onAction(EchosAction.OnRecordButtonLongClick)
+                    }else{
+                        onAction(EchosAction.OnRequestPermissionQuickRecording)
+                    }
                 }
             )
         },
