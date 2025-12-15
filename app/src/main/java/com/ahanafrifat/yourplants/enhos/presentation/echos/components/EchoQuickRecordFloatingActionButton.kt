@@ -24,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
@@ -152,7 +153,7 @@ fun EchoQuickRecordFloatingActionButton(
             },
             colors = rememberBubbleFloatingActionButtonColors(
                 primary = if (isWithinCancelThreshold) {
-                    SolidColor(MaterialTheme.colorScheme.errorContainer)
+                    SolidColor(Color.Red)
                 } else {
                     MaterialTheme.colorScheme.buttonGradient
                 },
