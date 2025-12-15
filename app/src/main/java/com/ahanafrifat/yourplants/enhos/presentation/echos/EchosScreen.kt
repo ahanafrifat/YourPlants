@@ -27,6 +27,7 @@ import com.ahanafrifat.yourplants.core.presentation.designsystem.theme.YourPlant
 import com.ahanafrifat.yourplants.core.presentation.designsystem.theme.bgGradient
 import com.ahanafrifat.yourplants.core.presentation.util.ObserveAsEvents
 import com.ahanafrifat.yourplants.core.presentation.util.isAppInForeground
+import com.ahanafrifat.yourplants.enhos.domain.recording.RecordingDetails
 import com.ahanafrifat.yourplants.enhos.presentation.echos.components.EchoFilterRow
 import com.ahanafrifat.yourplants.enhos.presentation.echos.components.EchoList
 import com.ahanafrifat.yourplants.enhos.presentation.echos.components.EchoQuickRecordFloatingActionButton
@@ -40,6 +41,7 @@ import timber.log.Timber
 
 @Composable
 fun EchosRoot(
+    onNavigationToCreateEcho: (RecordingDetails) -> Unit,
     viewModel: EchosViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -69,6 +71,7 @@ fun EchosRoot(
 
             is EchosEvent.OnDoneRecording -> {
                 Timber.d("Recording Successful!")
+                onNavigationToCreateEcho(events.recordingDetails)
             }
         }
     }
