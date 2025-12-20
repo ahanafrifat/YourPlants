@@ -42,7 +42,7 @@ class CreateEchoViewModel: ViewModel() {
             is CreateEchoAction.OnTitleChange -> TODO()
             is CreateEchoAction.OnTopicClick -> TODO()
             is CreateEchoAction.OnTrackSizeAvailable -> TODO()
-            CreateEchoAction.ShowMoodSelector -> TODO()
+            CreateEchoAction.OnSelectMoodClick -> TODO()
         }
     }
 }

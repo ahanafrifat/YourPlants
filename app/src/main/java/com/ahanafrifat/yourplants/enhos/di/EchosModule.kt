@@ -2,6 +2,7 @@ package com.ahanafrifat.yourplants.enhos.di
 
 import com.ahanafrifat.yourplants.enhos.data.recording.AndroidVoiceRecorder
 import com.ahanafrifat.yourplants.enhos.domain.recording.VoiceRecorder
+import com.ahanafrifat.yourplants.enhos.presentation.create_echo.CreateEchoViewModel
 import com.ahanafrifat.yourplants.enhos.presentation.echos.EchosViewModel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.core.module.dsl.viewModelOf
@@ -17,4 +18,5 @@ val echoModule = module {
     } bind VoiceRecorder::class
 
     viewModelOf(::EchosViewModel)
+    viewModelOf(::CreateEchoViewModel)
 }

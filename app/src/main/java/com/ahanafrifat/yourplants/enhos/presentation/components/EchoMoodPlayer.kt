@@ -32,37 +32,37 @@ import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun EchoMoodPlayer(
-    moodUi: MoodUi,
+    moodUi: MoodUi?,
     playbackState: PlaybackState,
-    playerProgress: ()-> Float,
+    playerProgress: () -> Float,
     durationPlayed: Duration,
     totalPlayBackDuration: Duration,
     powerRatios: List<Float>,
-    onPlayClick: ()-> Unit,
-    onPauseClick: ()-> Unit,
+    onPlayClick: () -> Unit,
+    onPauseClick: () -> Unit,
     onTrackSizeAvailable: (TrackSizeInfo) -> Unit,
     modifier: Modifier = Modifier,
     amplitudeBarWidth: Dp = 5.dp,
     amplitudeBarSpacing: Dp = 4.dp
-){
-    val iconTint = when(moodUi){
+) {
+    val iconTint = when (moodUi) {
         null -> MoodPrimary80
         else -> moodUi.colorSet.vivid
     }
-    val trackFillColor = when(moodUi){
+    val trackFillColor = when (moodUi) {
         null -> MoodPrimary80
         else -> moodUi.colorSet.vivid
     }
-    val backgroundColor = when(moodUi){
+    val backgroundColor = when (moodUi) {
         null -> MoodPrimary25
         else -> moodUi.colorSet.faded
     }
-    val trackColor = when(moodUi){
+    val trackColor = when (moodUi) {
         null -> MoodPrimary35
         else -> moodUi.colorSet.desaturated
     }
 
-    val formattedDurationText = remember (durationPlayed,totalPlayBackDuration){
+    val formattedDurationText = remember(durationPlayed, totalPlayBackDuration) {
         "${durationPlayed.formateMMSS()}/${totalPlayBackDuration.formateMMSS()}"
     }
 
@@ -112,7 +112,7 @@ fun EchoMoodPlayer(
 
 @Preview
 @Composable
-private fun EchoMoodPlayerPreview(){
+private fun EchoMoodPlayerPreview() {
     YourPlantsTheme {
         val ratios = remember {
             (1..30).map {
@@ -122,7 +122,7 @@ private fun EchoMoodPlayerPreview(){
 
         EchoMoodPlayer(
             moodUi = MoodUi.EXCITED,
-            playerProgress = {0.3f},
+            playerProgress = { 0.3f },
             playbackState = PlaybackState.PLAYING,
             durationPlayed = 125.seconds,
             totalPlayBackDuration = 250.seconds,

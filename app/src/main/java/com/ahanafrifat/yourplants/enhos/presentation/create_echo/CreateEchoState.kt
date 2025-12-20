@@ -11,7 +11,7 @@ data class CreateEchoState(
     val showMoodSelector: Boolean = true,
     val selectedMood: MoodUi = MoodUi.NEUTRAL,
     val showTopicSuggestions: Boolean = false,
-    val moodUi: MoodUi? = null,
+    val mood: MoodUi? = null,
     val searchResults: List<String> = emptyList(),
     val showCreateTopicOption: Boolean = false,
     val canSaveEcho: Boolean = false,
