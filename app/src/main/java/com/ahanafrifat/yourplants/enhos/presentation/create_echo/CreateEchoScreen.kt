@@ -56,6 +56,7 @@ import com.ahanafrifat.yourplants.core.presentation.designsystem.theme.YourPlant
 import com.ahanafrifat.yourplants.core.presentation.designsystem.theme.secondary70
 import com.ahanafrifat.yourplants.core.presentation.designsystem.theme.secondary95
 import com.ahanafrifat.yourplants.enhos.presentation.components.EchoMoodPlayer
+import com.ahanafrifat.yourplants.enhos.presentation.create_echo.components.SelectMoodSheet
 import com.ahanafrifat.yourplants.enhos.presentation.models.MoodUi
 import org.koin.androidx.compose.koinViewModel
 
@@ -253,6 +254,21 @@ fun CreateEchoScreen(
                     }
                 )
             }
+        }
+
+        if(state.showMoodSelector){
+            SelectMoodSheet(
+                selectedMood = state.selectedMood,
+                onMoodClick = {
+                    onAction(CreateEchoAction.OnMoodClick(it))
+                },
+                onDismiss = {
+                    onAction(CreateEchoAction.OnDismissMoodSelector)
+                },
+                onConfirmClick = {
+                    onAction(CreateEchoAction.OnConfirmMood)
+                }
+            )
         }
     }
 }

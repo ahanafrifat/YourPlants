@@ -10,6 +10,7 @@ import androidx.navigation.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.ahanafrifat.yourplants.enhos.presentation.create_echo.CreateEchoRoot
 import com.ahanafrifat.yourplants.enhos.presentation.echos.EchosRoot
 import com.ahanafrifat.yourplants.enhos.presentation.util.toCreateEchoRoute
 
@@ -29,13 +30,7 @@ fun NavigationRoot(
             )
         }
         composable<NavigationRoute.CreateEcho> {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("Create Echo Screen")
-            }
+            CreateEchoRoot()
         }
     }
 }
