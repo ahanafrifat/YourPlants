@@ -56,6 +56,7 @@ import com.ahanafrifat.yourplants.core.presentation.designsystem.theme.YourPlant
 import com.ahanafrifat.yourplants.core.presentation.designsystem.theme.secondary70
 import com.ahanafrifat.yourplants.core.presentation.designsystem.theme.secondary95
 import com.ahanafrifat.yourplants.enhos.presentation.components.EchoMoodPlayer
+import com.ahanafrifat.yourplants.enhos.presentation.create_echo.components.EchoTopicsRow
 import com.ahanafrifat.yourplants.enhos.presentation.create_echo.components.SelectMoodSheet
 import com.ahanafrifat.yourplants.enhos.presentation.models.MoodUi
 import org.koin.androidx.compose.koinViewModel
@@ -190,6 +191,25 @@ fun CreateEchoScreen(
             )
 
             //TODO Insert TopicsFlowRow
+            EchoTopicsRow(
+                topics = state.topics,
+                addTopicText = state.addTopicText,
+                showCreateTopicOption = state.showCreateTopicOption,
+                showTopicSuggestions = state.showTopicSuggestions,
+                searchResults = state.searchResults,
+                onTopicClick = {
+                    onAction(CreateEchoAction.OnTopicClick(it))
+                },
+                onDismissTopicSuggestions = {
+                    onAction(CreateEchoAction.OnDismissTopicSuggestions)
+                },
+                onRemoveTopicClick = {
+                    onAction(CreateEchoAction.OnRemoveTopicClick(it))
+                },
+                onAddTopicTextChange = {
+                    onAction(CreateEchoAction.OnAddTopicTextChange(it))
+                }
+            )
 
             Row(
                 modifier = Modifier
