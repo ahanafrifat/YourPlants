@@ -6,6 +6,7 @@ import android.content.Context
 import android.media.MediaRecorder
 import android.os.Build
 import com.ahanafrifat.yourplants.enhos.domain.recording.RecordingDetails
+import com.ahanafrifat.yourplants.enhos.domain.recording.RecordingStorage
 import com.ahanafrifat.yourplants.enhos.domain.recording.VoiceRecorder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -41,7 +42,6 @@ class AndroidVoiceRecorder(
     private var isRecording: Boolean = false
     private val amplitudes = mutableListOf<Float>()
     private var isPaused: Boolean = false
-
     private var durationJob: Job? = null
     private var amplitudeJob: Job? = null
 
@@ -128,7 +128,7 @@ class AndroidVoiceRecorder(
         val id = UUID.randomUUID().toString()
         return File(
             context.cacheDir,
-            "${TEMP_FILE_PREFIX}_$id.mp4"
+            "${TEMP_FILE_PREFIX}_$id.${RecordingStorage.RECORDING_FILE_EXTENSION}"
         )
     }
 
