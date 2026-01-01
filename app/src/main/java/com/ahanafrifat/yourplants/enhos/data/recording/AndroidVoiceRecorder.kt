@@ -29,7 +29,6 @@ class AndroidVoiceRecorder(
     private val applicationScope: CoroutineScope
 ) : VoiceRecorder {
     companion object Companion {
-        private const val TEMP_FILE_PREFIX = "temp_recording"
         private const val MAX_AMPLITUDE_VALUE = 26_000L
     }
 
@@ -128,7 +127,7 @@ class AndroidVoiceRecorder(
         val id = UUID.randomUUID().toString()
         return File(
             context.cacheDir,
-            "${TEMP_FILE_PREFIX}_$id.${RecordingStorage.RECORDING_FILE_EXTENSION}"
+            "${RecordingStorage.RECORDING_FILE_EXTENSION}_$id.${RecordingStorage.RECORDING_FILE_EXTENSION}"
         )
     }
 

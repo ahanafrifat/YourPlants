@@ -1,12 +1,12 @@
 package com.ahanafrifat.yourplants.enhos.domain.recording
 
-import android.R
-
 interface RecordingStorage {
-    suspend fun savePersistently(tempFilePath: R.string): String?
+    suspend fun savePersistently(tempFilePath: String): String?
     suspend fun cleanUpTemporaryFiles()
 
     companion object{
         const val RECORDING_FILE_EXTENSION = "mp4"
+        const val TEMP_FILE_PREFIX = "temp_recording"
+        const val PERSISTENT_FILE_PREFIX = "recording"
     }
 }
