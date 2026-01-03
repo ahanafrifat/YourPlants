@@ -5,7 +5,7 @@ import com.ahanafrifat.yourplants.enhos.presentation.models.MoodUi
 
 sealed interface CreateEchoAction {
     data object OnNavigateBackClick : CreateEchoAction
-    data class OnTitleChange(val text: String) : CreateEchoAction
+    data class OnTitleTextChange(val text: String) : CreateEchoAction
     data class OnAddTopicTextChange(val text: String) : CreateEchoAction
     data class OnNoteTextChange(val text: String) : CreateEchoAction
     data object OnSelectMoodClick : CreateEchoAction

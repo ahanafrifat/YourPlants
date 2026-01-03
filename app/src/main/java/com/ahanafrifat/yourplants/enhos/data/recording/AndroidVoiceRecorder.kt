@@ -127,7 +127,7 @@ class AndroidVoiceRecorder(
         val id = UUID.randomUUID().toString()
         return File(
             context.cacheDir,
-            "${RecordingStorage.RECORDING_FILE_EXTENSION}_$id.${RecordingStorage.RECORDING_FILE_EXTENSION}"
+            "${RecordingStorage.TEMP_FILE_PREFIX}_$id.${RecordingStorage.RECORDING_FILE_EXTENSION}"
         )
     }
 

@@ -2,6 +2,7 @@
 
 package com.ahanafrifat.yourplants.enhos.presentation.create_echo
 
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -22,7 +23,6 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Create
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -43,6 +43,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -58,6 +59,7 @@ import com.ahanafrifat.yourplants.core.presentation.designsystem.text_fields.Tra
 import com.ahanafrifat.yourplants.core.presentation.designsystem.theme.YourPlantsTheme
 import com.ahanafrifat.yourplants.core.presentation.designsystem.theme.secondary70
 import com.ahanafrifat.yourplants.core.presentation.designsystem.theme.secondary95
+import com.ahanafrifat.yourplants.core.presentation.util.ObserveAsEvents
 import com.ahanafrifat.yourplants.enhos.presentation.components.EchoMoodPlayer
 import com.ahanafrifat.yourplants.enhos.presentation.create_echo.components.EchoTopicsRow
 import com.ahanafrifat.yourplants.enhos.presentation.create_echo.components.SelectMoodSheet
@@ -71,6 +73,19 @@ fun CreateEchoRoot(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+    val context = LocalContext.current
+    ObserveAsEvents(viewModel.events) { event ->
+        when (event) {
+            CreateEchoEvent.FailedToSave -> {
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.error_couldnt_save_file),
+                    Toast.LENGTH_LONG
+                ).show()
+                onConfirmLeave()
+            }
+        }
+    }
     CreateEchoScreen(
         state = state,
         onConfirmLeave = onConfirmLeave,
@@ -84,9 +99,9 @@ fun CreateEchoScreen(
     onConfirmLeave: () -> Unit,
     onAction: (CreateEchoAction) -> Unit
 ) {
-    BackHandler (
+    BackHandler(
         enabled = !state.showConfirmLeaveDialog
-    ){
+    ) {
         onAction(CreateEchoAction.OnGoBack)
     }
     Scaffold(
@@ -163,7 +178,7 @@ fun CreateEchoScreen(
                 TransparentHintTextField(
                     text = state.titleText,
                     onValueChange = {
-                        onAction(CreateEchoAction.OnTitleChange(it))
+                        onAction(CreateEchoAction.OnTitleTextChange(it))
                     },
                     modifier = Modifier
                         .weight(1f),
