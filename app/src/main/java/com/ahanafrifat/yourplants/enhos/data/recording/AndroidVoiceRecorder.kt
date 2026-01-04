@@ -99,7 +99,7 @@ class AndroidVoiceRecorder(
                 }
                 amplitudeRatio ?: 0f
             } catch (e: Exception) {
-                Timber.e(e, "Faild to retrive current Amplitude")
+                Timber.e(e, "Failed to retrieve current Amplitude")
                 0f
             }
         } else 0f
