@@ -7,8 +7,11 @@ import androidx.navigation.toRoute
 import com.ahanafrifat.yourplants.app.navigation.NavigationRoute
 import com.ahanafrifat.yourplants.core.presentation.designsystem.dropdowns.Selectable.Companion.asUnselectedItems
 import com.ahanafrifat.yourplants.enhos.domain.recording.RecordingStorage
+import com.ahanafrifat.yourplants.enhos.presentation.echos.models.TrackSizeInfo
 import com.ahanafrifat.yourplants.enhos.presentation.models.MoodUi
+import com.ahanafrifat.yourplants.enhos.presentation.util.AmplitudeNormalizer
 import com.ahanafrifat.yourplants.enhos.presentation.util.toRecordingDetails
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -79,12 +82,29 @@ class CreateEchoViewModel(
             CreateEchoAction.OnSaveClick -> onSaveClick()
             is CreateEchoAction.OnTitleTextChange -> onTitleTextChange(action.text)
             is CreateEchoAction.OnTopicClick -> onTopicClick(action.topic)
-            is CreateEchoAction.OnTrackSizeAvailable -> {}
+            is CreateEchoAction.OnTrackSizeAvailable -> onTrackSizeAvailable(action.trackSizeInfo)
             CreateEchoAction.OnSelectMoodClick -> onSelectMoodClick()
             CreateEchoAction.OnDismissConfirmLeaveDialog -> onDismissConfirmLeaveDialog()
             CreateEchoAction.OnCancelClick,
             CreateEchoAction.OnNavigateBackClick,
             CreateEchoAction.OnGoBack -> onShowConfirmLeaveDialog()
+        }
+    }
+
+    private fun onTrackSizeAvailable(trackSizeInfo: TrackSizeInfo) {
+        viewModelScope.launch(Dispatchers.Default) {
+            val finalAmplitude = AmplitudeNormalizer.normalize(
+                sourceAmplitude = recordingDetails.amplitudes,
+                trackWidth = trackSizeInfo.trackWidth,
+                barWidth = trackSizeInfo.barWidth,
+                spacing = trackSizeInfo.spacing
+            )
+
+            _state.update {
+                it.copy(
+                    playbackAmplitudes = finalAmplitude
+                )
+            }
         }
     }
 

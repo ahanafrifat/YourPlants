@@ -18,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.ahanafrifat.yourplants.core.presentation.designsystem.theme.YourPlantsTheme
+import com.ahanafrifat.yourplants.enhos.presentation.echos.models.TrackSizeInfo
 import com.ahanafrifat.yourplants.enhos.presentation.models.MoodUi
 import kotlin.random.Random
 
@@ -74,7 +75,7 @@ fun EchoPlayBar(
 
         }
 
-        clipPath(clipPath){
+        clipPath(clipPath) {
             drawRect(
                 color = trackFillColor,
                 size = Size(
