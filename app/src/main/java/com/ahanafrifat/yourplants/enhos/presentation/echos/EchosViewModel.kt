@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.ahanafrifat.yourplants.R
 import com.ahanafrifat.yourplants.core.presentation.designsystem.dropdowns.Selectable
 import com.ahanafrifat.yourplants.core.presentation.util.UiText
+import com.ahanafrifat.yourplants.enhos.domain.audio.AudioPlayer
 import com.ahanafrifat.yourplants.enhos.domain.recording.VoiceRecorder
 import com.ahanafrifat.yourplants.enhos.presentation.echos.models.AudioCaptureMethod
 import com.ahanafrifat.yourplants.enhos.presentation.echos.models.EchoFilterChip
@@ -25,10 +26,12 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 class EchosViewModel(
-    private val voiceRecorder: VoiceRecorder
+    private val voiceRecorder: VoiceRecorder,
+    private val audioPlayer: AudioPlayer
 ) : ViewModel() {
 
     companion object {
@@ -36,6 +39,7 @@ class EchosViewModel(
     }
 
     private var hasLoadedInitialData = false
+    private val playingEchoId = MutableStateFlow<Int?>(null)
     private val selectedMoodFilters = MutableStateFlow<List<MoodUi>>(emptyList())
     private val selectedTopicFilters = MutableStateFlow<List<String>>(emptyList())
     private val eventChannel = Channel<EchosEvent>()
@@ -74,7 +78,7 @@ class EchosViewModel(
                 }
             }
 
-            EchosAction.OnRecordButtonLongClick ->{
+            EchosAction.OnRecordButtonLongClick -> {
                 startRecording(captureMethod = AudioCaptureMethod.QUICK)
             }
 
@@ -119,19 +123,54 @@ class EchosViewModel(
                 toggleTopicFilter(action.topic)
             }
 
-            is EchosAction.OnPlayEchoClick -> {}
+            is EchosAction.OnPlayEchoClick -> onPlayEchoClick(action.echoId)
             is EchosAction.OnTrackSizeAvailable -> {}
             is EchosAction.OnAudioPermissionGranted -> {
                 Timber.d("Recording Started ...")
                 startRecording(captureMethod = AudioCaptureMethod.STANDARD)
             }
 
-            EchosAction.OnPauseAudioClick -> {}
+            EchosAction.OnPauseAudioClick -> audioPlayer.pause()
             EchosAction.OnPauseRecordingClick -> pauseRecording()
             EchosAction.OnCancelRecording -> cancelRecording()
             EchosAction.OnCompleteRecording -> stopRecording()
             EchosAction.OnResumeRecordingClick -> resumeRecording()
         }
+    }
+
+    private fun onPlayEchoClick(echoId: Int) {
+        val selectedEcho = state.value.echos.values.flatten().first() { it.id == echoId }
+        val activeTrack = audioPlayer.activeTrack.value
+        val isNewEcho = playingEchoId.value != echoId
+        val isSameEchoIsPlayingFromBeginning = echoId == playingEchoId.value && activeTrack != null
+                && activeTrack.durationPlayed == Duration.ZERO
+
+        when {
+            isNewEcho || isSameEchoIsPlayingFromBeginning -> {
+                playingEchoId.update { echoId }
+                audioPlayer.stop()
+                audioPlayer.play(
+                    filePath = selectedEcho.audioFilePath,
+                    onComplete = ::completePlayback
+                )
+            }
+            else -> audioPlayer.resume()
+        }
+    }
+
+    private fun completePlayback() {
+        _state.update {
+            it.copy(
+                echos = it.echos.mapValues { (_, echos) ->
+                    echos.map { echos ->
+                        echos.copy(
+                            playbackCurrentDuration = Duration.ZERO
+                        )
+                    }
+                }
+            )
+        }
+        playingEchoId.update { null }
     }
 
     private fun requestAudioPermission() = viewModelScope.launch {

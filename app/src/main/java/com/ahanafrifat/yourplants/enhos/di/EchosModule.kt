@@ -1,7 +1,9 @@
 package com.ahanafrifat.yourplants.enhos.di
 
+import com.ahanafrifat.yourplants.enhos.data.audio.AndroidAudioPlayer
 import com.ahanafrifat.yourplants.enhos.data.recording.AndroidVoiceRecorder
 import com.ahanafrifat.yourplants.enhos.data.recording.InternalRecordingStorage
+import com.ahanafrifat.yourplants.enhos.domain.audio.AudioPlayer
 import com.ahanafrifat.yourplants.enhos.domain.recording.RecordingStorage
 import com.ahanafrifat.yourplants.enhos.domain.recording.VoiceRecorder
 import com.ahanafrifat.yourplants.enhos.presentation.create_echo.CreateEchoViewModel
@@ -14,6 +16,7 @@ import org.koin.dsl.module
 val echoModule = module {
     singleOf(::AndroidVoiceRecorder) bind VoiceRecorder::class
     singleOf(::InternalRecordingStorage) bind RecordingStorage::class
+    singleOf(::AndroidAudioPlayer) bind AudioPlayer::class
 
     viewModelOf(::EchosViewModel)
     viewModelOf(::CreateEchoViewModel)
