@@ -41,9 +41,20 @@ class CreateEchoViewModel(
     private val recordingDetails = route.toRecordingDetails()
     private val eventChannel = Channel<CreateEchoEvent>()
     val events = eventChannel.receiveAsFlow()
-    private val _state = MutableStateFlow(CreateEchoState(
-        playbackTotalDuration = recordingDetails.duration
-    ))
+    private val restoredTopics = savedStateHandle.get<String>("topics")?.split(",")
+    private val _state = MutableStateFlow(
+        CreateEchoState(
+            playbackTotalDuration = recordingDetails.duration,
+            titleText = savedStateHandle["titleText"] ?: "",
+            noteText = savedStateHandle["noteText"] ?: "",
+            topics = restoredTopics ?: emptyList(),
+            mood = savedStateHandle.get<String>("mood")?.let {
+                MoodUi.valueOf(it)
+            },
+            showMoodSelector = savedStateHandle.get<String>("mood") == null,
+            canSaveEcho = savedStateHandle.get<Boolean>("canSaveEcho") == true
+        )
+    )
     val state = _state
         .onStart {
             if (!hasLoadedInitialData) {
@@ -51,6 +62,13 @@ class CreateEchoViewModel(
                 observeAddTopicText()
                 hasLoadedInitialData = true
             }
+        }
+        .onEach { state ->
+            savedStateHandle["titleText"] = state.titleText
+            savedStateHandle["noteText"] = state.noteText
+            savedStateHandle["topics"] = state.topics.joinToString(",")
+            savedStateHandle["mood"] = state.mood?.name
+            savedStateHandle["canSaveEcho"] = state.canSaveEcho
         }
         .stateIn(
             scope = viewModelScope,
@@ -85,7 +103,7 @@ class CreateEchoViewModel(
             CreateEchoAction.OnDismissMoodSelector -> onDismissMoodSelector()
             CreateEchoAction.OnDismissTopicSuggestions -> onDismissTopicSuggestions()
             is CreateEchoAction.OnMoodClick -> onMoodClick(action.moodUi)
-            is CreateEchoAction.OnNoteTextChange -> {}
+            is CreateEchoAction.OnNoteTextChange -> onNoteTextChange(action.text)
             CreateEchoAction.OnPauseAudioClick -> audioPlayer.pause()
             CreateEchoAction.OnPlayAudioClick -> onPlayAudioClick()
             is CreateEchoAction.OnRemoveTopicClick -> onRemoveTopicClick(action.topic)
@@ -98,6 +116,14 @@ class CreateEchoViewModel(
             CreateEchoAction.OnCancelClick,
             CreateEchoAction.OnNavigateBackClick,
             CreateEchoAction.OnGoBack -> onShowConfirmLeaveDialog()
+        }
+    }
+
+    private fun onNoteTextChange(text: String) {
+        _state.update {
+            it.copy(
+                noteText = text
+            )
         }
     }
 
@@ -123,10 +149,12 @@ class CreateEchoViewModel(
                 .activeTrack
                 .filterNotNull()
                 .onEach { track ->
-                    _state.update { it.copy(
-                        playbackState = if (track.isPlaying) PlaybackState.PLAYING else PlaybackState.PAUSED,
-                        durationPlayed = track.durationPlayed
-                    ) }
+                    _state.update {
+                        it.copy(
+                            playbackState = if (track.isPlaying) PlaybackState.PLAYING else PlaybackState.PAUSED,
+                            durationPlayed = track.durationPlayed
+                        )
+                    }
                 }
                 .launchIn(viewModelScope)
         }
@@ -152,7 +180,8 @@ class CreateEchoViewModel(
     private fun onTitleTextChange(text: String) {
         _state.update {
             it.copy(
-                titleText = text
+                titleText = text,
+                canSaveEcho = text.isNotBlank() && it.mood != null
             )
         }
     }
