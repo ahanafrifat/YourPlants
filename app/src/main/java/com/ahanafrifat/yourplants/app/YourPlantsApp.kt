@@ -3,6 +3,7 @@ package com.ahanafrifat.yourplants.app
 import android.app.Application
 import com.ahanafrifat.yourplants.BuildConfig
 import com.ahanafrifat.yourplants.app.di.appModule
+import com.ahanafrifat.yourplants.core.database.di.databaseModule
 import com.ahanafrifat.yourplants.enhos.di.echoModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -25,7 +26,8 @@ class YourPlantsApp : Application() {
             androidContext(this@YourPlantsApp)
             modules(
                 appModule,
-                echoModule
+                echoModule,
+                databaseModule
             )
         }
     }
