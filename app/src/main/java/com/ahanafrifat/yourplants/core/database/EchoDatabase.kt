@@ -6,7 +6,7 @@ import androidx.room.TypeConverters
 import com.ahanafrifat.yourplants.core.database.echo.EchoDao
 import com.ahanafrifat.yourplants.core.database.echo.EchoEntity
 import com.ahanafrifat.yourplants.core.database.echo.FloatListTypeConverter
-import com.ahanafrifat.yourplants.core.database.echo.MoodUiTypeConverter
+import com.ahanafrifat.yourplants.core.database.echo.MoodTypeConverter
 import com.ahanafrifat.yourplants.core.database.echo_topic_relation.EchoTopicCrossRef
 import com.ahanafrifat.yourplants.core.database.topic.TopicEntity
 
@@ -15,7 +15,7 @@ import com.ahanafrifat.yourplants.core.database.topic.TopicEntity
     version = 1
 )
 @TypeConverters(
-    MoodUiTypeConverter::class,
+    MoodTypeConverter::class,
     FloatListTypeConverter::class
 )
 abstract class EchoDatabase : RoomDatabase() {

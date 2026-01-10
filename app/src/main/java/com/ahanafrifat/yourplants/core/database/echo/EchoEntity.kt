@@ -2,14 +2,14 @@ package com.ahanafrifat.yourplants.core.database.echo
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.ahanafrifat.yourplants.enhos.presentation.models.MoodUi
+import com.ahanafrifat.yourplants.enhos.domain.echo.Mood
 
 @Entity
 data class EchoEntity(
     @PrimaryKey(autoGenerate = true)
     val echoId: Int = 0,
     val title: String,
-    val mood: MoodUi,
+    val mood: Mood,
     val recordedAt: Long,
     val note: String?,
     val audioFilePath: String,
