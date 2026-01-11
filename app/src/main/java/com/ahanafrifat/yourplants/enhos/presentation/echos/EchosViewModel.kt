@@ -73,7 +73,7 @@ class EchosViewModel(
             initialValue = EchosState()
         )
 
-    val echos = echoDataSource
+    private val echos = echoDataSource
         .observeEchos()
         .onEach { echos ->
             _state.update {
@@ -203,7 +203,7 @@ class EchosViewModel(
                 } else echo.toEchoUi()
             }
         }
-            .groupedByRelativeDate()
+            .groupByRelativeDate()
             .onEach { groupedEchos ->
                 _state.update {
                     it.copy(
@@ -216,7 +216,7 @@ class EchosViewModel(
     }
 
     private fun onPlayEchoClick(echoId: Int) {
-        val selectedEcho = state.value.echos.values.flatten().first() { it.id == echoId }
+        val selectedEcho = state.value.echos.values.flatten().first { it.id == echoId }
         val activeTrack = audioPlayer.activeTrack.value
         val isNewEcho = playingEchoId.value != echoId
         val isSameEchoIsPlayingFromBeginning = echoId == playingEchoId.value && activeTrack != null
@@ -240,8 +240,8 @@ class EchosViewModel(
         _state.update {
             it.copy(
                 echos = it.echos.mapValues { (_, echos) ->
-                    echos.map { echos ->
-                        echos.copy(
+                    echos.map { echo ->
+                        echo.copy(
                             playbackCurrentDuration = Duration.ZERO
                         )
                     }
@@ -423,7 +423,7 @@ class EchosViewModel(
         }
     }
 
-    private fun Flow<List<EchoUi>>.groupedByRelativeDate(): Flow<Map<UiText, List<EchoUi>>> {
+    private fun Flow<List<EchoUi>>.groupByRelativeDate(): Flow<Map<UiText, List<EchoUi>>> {
         val formatter = DateTimeFormatter.ofPattern("dd MMM")
         val today = LocalDate.now()
         return map { echos ->

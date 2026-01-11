@@ -71,14 +71,14 @@ fun EchosRoot(
 
             is EchosEvent.OnDoneRecording -> {
                 Timber.d("Recording Successful!")
-                onNavigationToCreateEcho(events.recordingDetails)
+                onNavigationToCreateEcho(events.details)
             }
         }
     }
 
     val isAppInForeground by isAppInForeground()
     LaunchedEffect(isAppInForeground, state.recordingState) {
-        if (state.recordingState== RecordingState.NORMAL_CAPTURE && !isAppInForeground){
+        if (state.recordingState == RecordingState.NORMAL_CAPTURE && !isAppInForeground) {
             viewModel.onAction(EchosAction.OnPauseRecordingClick)
         }
     }
@@ -103,9 +103,9 @@ fun EchosScreen(
                 },
                 isQuickRecording = state.recordingState == RecordingState.QUICK_CAPTURE,
                 onLongPressEnd = { cancelledRecording ->
-                    if (cancelledRecording){
+                    if (cancelledRecording) {
                         onAction(EchosAction.OnCancelRecording)
-                    }else{
+                    } else {
                         onAction(EchosAction.OnCompleteRecording)
                     }
                 },
@@ -114,9 +114,9 @@ fun EchosScreen(
                         context,
                         Manifest.permission.RECORD_AUDIO
                     ) == PackageManager.PERMISSION_GRANTED
-                    if(hasPermission){
+                    if (hasPermission) {
                         onAction(EchosAction.OnRecordButtonLongClick)
-                    }else{
+                    } else {
                         onAction(EchosAction.OnRequestPermissionQuickRecording)
                     }
                 }
