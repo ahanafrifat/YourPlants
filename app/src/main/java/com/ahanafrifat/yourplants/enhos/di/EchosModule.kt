@@ -10,6 +10,7 @@ import com.ahanafrifat.yourplants.enhos.domain.recording.RecordingStorage
 import com.ahanafrifat.yourplants.enhos.domain.recording.VoiceRecorder
 import com.ahanafrifat.yourplants.enhos.presentation.create_echo.CreateEchoViewModel
 import com.ahanafrifat.yourplants.enhos.presentation.echos.EchosViewModel
+import com.ahanafrifat.yourplants.enhos.presentation.settings.SettingsViewModel
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
@@ -23,4 +24,5 @@ val echoModule = module {
 
     viewModelOf(::EchosViewModel)
     viewModelOf(::CreateEchoViewModel)
+    viewModelOf(::SettingsViewModel)
 }

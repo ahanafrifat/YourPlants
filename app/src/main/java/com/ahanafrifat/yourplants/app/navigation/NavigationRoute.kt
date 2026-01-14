@@ -4,12 +4,15 @@ import kotlinx.serialization.Serializable
 
 sealed interface NavigationRoute {
     @Serializable
-    data object Echos: NavigationRoute
+    data object Echos : NavigationRoute
 
     @Serializable
     data class CreateEcho(
         val recordingPath: String,
         val duration: Long,
         val amplitude: String
-    ): NavigationRoute
+    ) : NavigationRoute
+
+    @Serializable
+    data object Settings: NavigationRoute
 }
