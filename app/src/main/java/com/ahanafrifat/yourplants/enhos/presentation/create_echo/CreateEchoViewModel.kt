@@ -11,6 +11,7 @@ import com.ahanafrifat.yourplants.enhos.domain.echo.Echo
 import com.ahanafrifat.yourplants.enhos.domain.echo.EchoDataSource
 import com.ahanafrifat.yourplants.enhos.domain.echo.Mood
 import com.ahanafrifat.yourplants.enhos.domain.recording.RecordingStorage
+import com.ahanafrifat.yourplants.enhos.domain.settings.SettingsPreference
 import com.ahanafrifat.yourplants.enhos.presentation.echos.models.TrackSizeInfo
 import com.ahanafrifat.yourplants.enhos.presentation.models.MoodUi
 import com.ahanafrifat.yourplants.enhos.presentation.models.PlaybackState
@@ -30,6 +31,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.Instant
@@ -39,7 +41,8 @@ class CreateEchoViewModel(
     private val savedStateHandle: SavedStateHandle,
     private val recordingStorage: RecordingStorage,
     private val audioPlayer: AndroidAudioPlayer,
-    private val echoDataSource: EchoDataSource
+    private val echoDataSource: EchoDataSource,
+    private val settingsPreference: SettingsPreference
 ) : ViewModel() {
     private var hasLoadedInitialData = false
     private val route = savedStateHandle.toRoute<NavigationRoute.CreateEcho>()
@@ -65,6 +68,7 @@ class CreateEchoViewModel(
             if (!hasLoadedInitialData) {
                 //load init data
                 observeAddTopicText()
+                fetchDefaultSettings()
                 hasLoadedInitialData = true
             }
         }
@@ -122,6 +126,32 @@ class CreateEchoViewModel(
             CreateEchoAction.OnNavigateBackClick,
             CreateEchoAction.OnGoBack -> onShowConfirmLeaveDialog()
         }
+    }
+
+    private fun fetchDefaultSettings() {
+        settingsPreference
+            .observeDefaultMood()
+            .take(1)
+            .onEach { defaultMood ->
+                _state.update {
+                    it.copy(
+                        selectedMood = MoodUi.valueOf(defaultMood.name)
+                    )
+                }
+            }
+            .launchIn(viewModelScope)
+
+        settingsPreference
+            .observeDefaultTopics()
+            .take(1)
+            .onEach { defaultTopics ->
+                _state.update {
+                    it.copy(
+                        topics = defaultTopics
+                    )
+                }
+            }
+            .launchIn(viewModelScope)
     }
 
     private fun onNoteTextChange(text: String) {
@@ -206,10 +236,10 @@ class CreateEchoViewModel(
             }
 
             val currentState = state.value
-            val echo= Echo(
+            val echo = Echo(
                 mood = currentState.mood?.let {
                     Mood.valueOf(it.name)
-                }?: throw IllegalStateException("Mood must be set before saving echo"),
+                } ?: throw IllegalStateException("Mood must be set before saving echo"),
                 title = currentState.titleText.trim(),
                 note = currentState.noteText.ifBlank { null },
                 topics = currentState.topics,
