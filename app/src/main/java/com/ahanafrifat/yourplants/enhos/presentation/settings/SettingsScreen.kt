@@ -25,7 +25,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ahanafrifat.yourplants.R
+import com.ahanafrifat.yourplants.core.presentation.designsystem.theme.YourPlantsTheme
 import com.ahanafrifat.yourplants.core.presentation.designsystem.theme.bgGradient
+import com.ahanafrifat.yourplants.enhos.presentation.create_echo.CreateEchoState
+import com.ahanafrifat.yourplants.enhos.presentation.models.MoodUi
+import com.ahanafrifat.yourplants.enhos.presentation.settings.components.MoodCard
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -91,13 +95,27 @@ fun SettingsScreen(
                 .padding(innerPadding)
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) { }
+        ) {
 
+            MoodCard(
+                selectedMood = state.selectedMood,
+                onMoodClick = {
+                    onAction(SettingsAction.OnMoodClick(it))
+                }
+            )
+        }
     }
 }
 
 @Preview
 @Composable
 private fun SettingsScreenPreview() {
-
+    YourPlantsTheme {
+        SettingsScreen(
+            state = SettingsState(
+                selectedMood = MoodUi.SAD
+            ),
+            onAction = {},
+        )
+    }
 }
