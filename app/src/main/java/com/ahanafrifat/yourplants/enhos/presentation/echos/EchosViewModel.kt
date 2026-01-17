@@ -310,7 +310,18 @@ class EchosViewModel(
             if (recordingDetails.duration < MIN_RECORD_DURATION) {
                 eventChannel.send(EchosEvent.RecordingTooShort)
             } else {
-                eventChannel.send(EchosEvent.OnDoneRecording(recordingDetails))
+                eventChannel.send(EchosEvent.OnDoneRecording(
+                    // Arbitrary track dimension to not make the app crash
+                    // when navigating and passing the amplitudes as an arguments
+                    details = recordingDetails.copy(
+                        amplitudes = AmplitudeNormalizer.normalize(
+                            sourceAmplitude = recordingDetails.amplitudes,
+                            trackWidth = 10_000f,
+                            barWidth = 20f,
+                            spacing = 15f
+                        )
+                    )
+                ))
             }
         }
     }
