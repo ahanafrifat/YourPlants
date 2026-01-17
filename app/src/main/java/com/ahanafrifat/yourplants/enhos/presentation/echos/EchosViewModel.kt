@@ -1,5 +1,6 @@
 package com.ahanafrifat.yourplants.enhos.presentation.echos
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ahanafrifat.yourplants.R
@@ -45,7 +46,8 @@ import kotlin.time.Duration.Companion.seconds
 class EchosViewModel(
     private val voiceRecorder: VoiceRecorder,
     private val audioPlayer: AudioPlayer,
-    private val echoDataSource: EchoDataSource
+    private val echoDataSource: EchoDataSource,
+    private val saveStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     companion object {
@@ -65,6 +67,7 @@ class EchosViewModel(
             if (!hasLoadedInitialData) {
                 observeFilters()
                 observeEchos()
+                fetchNavigationArgs()
                 hasLoadedInitialData = true
             }
         }
@@ -183,6 +186,16 @@ class EchosViewModel(
             EchosAction.OnCancelRecording -> cancelRecording()
             EchosAction.OnCompleteRecording -> stopRecording()
             EchosAction.OnResumeRecordingClick -> resumeRecording()
+        }
+    }
+
+    private fun fetchNavigationArgs() {
+        val startRecording = saveStateHandle["startRecording"] ?: false
+        if (startRecording){
+            _state.update { it.copy(
+                currentCaptureMethod = AudioCaptureMethod.STANDARD
+            ) }
+            requestAudioPermission()
         }
     }
 
