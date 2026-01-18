@@ -88,15 +88,10 @@ The project is organized by features to keep the codebase modular:
 ---
 
 ## 📸 Screenshots
-*(Tip: Add your screenshots to a `screenshots` folder and link them here)*
-| Home Screen | Recording Screen |
-| :---: | :---: |
-| ![Placeholder](https://via.placeholder.com/200x400?text=Home+Screen) | ![Placeholder](https://via.placeholder.com/200x400?text=Recording+Screen) |
 
-<p align="center">
-  <img src="screenshots/home_screen_1.jpeg" width="300" alt="Home Screen">
-  <img src="screenshots/recording_screen_1.jpeg" width="300" alt="Recording Screen">
-</p>
+| Home Screen | Recording Screen | Recording Done Screen | Recording Discard Screen | Settings Screen |
+| :---: | :---: |
+| ![Placeholder](<img src="screenshots/home_screen_1.jpeg" alt="Home Screen">) | ![Placeholder](<img src="screenshots/recording_screen_1.jpeg" alt="Recording Screen">) | ![Placeholder](<img src="screenshots/new_entry_fill_text.jpeg" alt="Recording Done Screen">) | ![Placeholder](<img src="screenshots/recording_discard.jpeg" alt="Recording Discard Screen">) | ![Placeholder](<img src="screenshots/settings.jpeg" alt="Settings Screen">) |
 
 ---
 
