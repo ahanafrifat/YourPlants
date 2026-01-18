@@ -59,6 +59,7 @@ The project is organized by features to keep the codebase modular:
 *   **UI:** [Jetpack Compose](https://developer.android.com/jetpack/compose) - Modern declarative UI.
 *   **Dependency Injection:** [Koin](https://insert-koin.io/) - Pragmatic Kotlin DI.
 *   **Database:** [Room](https://developer.android.com/training/data-storage/room) - Local SQLite persistence.
+*   **Widgets:** [Jetpack Glance](https://developer.android.com/jetpack/compose/glance) - App widgets built with Compose.
 *   **Async/Flow:** [Kotlin Coroutines](https://kotlinlang.org/docs/coroutines-overview.html) & [Flow](https://kotlinlang.org/docs/flow.html).
 *   **Audio:** Custom wrappers for `MediaRecorder` and `MediaPlayer`.
 *   **Navigation:** [Compose Navigation](https://developer.android.com/jetpack/compose/navigation) for type-safe routing.
@@ -82,17 +83,16 @@ The project is organized by features to keep the codebase modular:
 
 ### Installation
 1. Clone the repository:
-    2. Open the project in Android Studio.
+2. Open the project in Android Studio.
 3. Sync Gradle and run the app on a physical device for the best audio experience.
 
 ---
 
 ## 📸 Screenshots
 
-| Home Screen | Recording Screen | Recording Done Screen | Recording Discard Screen | Settings Screen |
-| :---: | :---: |
-| ![Placeholder](<img src="screenshots/home_screen_1.jpeg" alt="Home Screen">) | ![Placeholder](<img src="screenshots/recording_screen_1.jpeg" alt="Recording Screen">) | ![Placeholder](<img src="screenshots/new_entry_fill_text.jpeg" alt="Recording Done Screen">) | ![Placeholder](<img src="screenshots/recording_discard.jpeg" alt="Recording Discard Screen">) | ![Placeholder](<img src="screenshots/settings.jpeg" alt="Settings Screen">) |
-
+| Home Screen | Recording | Done | Discard | Settings |
+| :---: | :---: | :---: | :---: | :---: |
+| ![Home](screenshots/home_screen_1.jpeg) | ![Recording](screenshots/home_screen_recording.jpeg) | ![Done](screenshots/new_entry_fill_text.jpeg) | ![Discard](screenshots/recording_discard.jpeg) | ![Settings](screenshots/settings.jpeg) |
 ---
 
 ## 📄 License
